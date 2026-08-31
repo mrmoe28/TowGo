@@ -107,7 +107,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Configure express-session with properly typed configuration
   const sessionConfig: expressSession.SessionOptions = {
-    secret: process.env.SESSION_SECRET || 'towgo-session-secret',
+    secret: (() => {
+      const s = process.env.SESSION_SECRET;
+      if (s) return s;
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('SESSION_SECRET must be set in production');
+      }
+      return 'dev-only-insecure-session-secret';
+    })(),
     resave: true,
     saveUninitialized: true,
     proxy: true,
