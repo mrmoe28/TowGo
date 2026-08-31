@@ -1,12 +1,9 @@
+import "./load-env";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import dotenv from "dotenv";
 import { db } from "./db";
 import { rlsMiddleware } from "./rls-helper";
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 
@@ -64,10 +61,10 @@ app.use(rlsMiddleware());
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
+  // Serves both the API and the client on one port.
+  // 5000 is the default (the only unfirewalled port on Replit); override with
+  // PORT for local runs, e.g. macOS where AirPlay already holds 5000.
+  const port = Number(process.env.PORT) || 5000;
   server.listen({
     port,
     host: "0.0.0.0",

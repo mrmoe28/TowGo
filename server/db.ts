@@ -15,7 +15,14 @@ export const client = postgres(connectionString, {
   max: 10, // Maximum number of connections
   idle_timeout: 20, // Max seconds to keep unused connections alive
   connect_timeout: 10, // Max seconds to wait for connection
-  ssl: true, // Enable SSL for all environments with Replit and Vercel
+  // Hosted providers (Replit, Vercel, Neon, Supabase) require SSL; a local
+  // Postgres does not support it. Honour an explicit ?sslmode= in the URL,
+  // otherwise enable SSL for everything except localhost.
+  ssl: /[?&]sslmode=disable/.test(connectionString)
+    ? false
+    : /@(localhost|127\.0\.0\.1|\[::1\])[:/]/.test(connectionString)
+      ? false
+      : 'require',
   onnotice: (notice) => {
     // Log database notices (optional, helpful for debugging)
     console.log('Database notice:', notice.message);

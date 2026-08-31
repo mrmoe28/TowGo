@@ -32,39 +32,92 @@ TowGo is an intelligent business discovery platform that leverages advanced AI a
 
 ## Getting Started
 
+Tested on Node.js 22 and npm 10. Total setup time is about two minutes.
+
 ### Prerequisites
 
-- Node.js 
-- PostgreSQL database
-- Google Maps API key
-- Perplexity API key
+- **Node.js 20 or newer** (`node -v`)
+- **A PostgreSQL database.** No local install needed if you have Docker -- step 3
+  starts one for you.
+- API keys are **optional**. The app runs without them; map search and AI
+  features stay switched off until you add them.
 
 ### Installation
 
-1. Clone the repository
-```
-git clone https://github.com/mrmoe28/towgo.git
-cd towgo
-```
+**1. Clone and install**
 
-2. Install dependencies
-```
+```bash
+git clone https://github.com/mrmoe28/TowGo.git
+cd TowGo
 npm install
 ```
 
-3. Create a `.env` file with your API keys
-```
-VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-PERPLEXITY_API_KEY=your_perplexity_api_key
-DATABASE_URL=your_database_url
+**2. Create your config file**
+
+```bash
+cp env.example .env
 ```
 
-4. Start the development server
+The defaults in that file work as-is with the database from step 3.
+
+**3. Start a database**
+
+If you already have PostgreSQL, skip this and put your own connection string
+in `DATABASE_URL`. Otherwise:
+
+```bash
+docker run -d --name towgo-pg \
+  -e POSTGRES_USER=towgo -e POSTGRES_PASSWORD=towgo -e POSTGRES_DB=towgo \
+  -p 55432:5432 postgres:16-alpine
 ```
+
+**4. Create the database tables**
+
+```bash
+npm run db:push
+```
+
+Required on first run -- the app will crash with a "relation does not exist"
+error if you skip it.
+
+**5. Start the app**
+
+```bash
 npm run dev
 ```
 
-5. Open your browser to `http://localhost:5000`
+Open **http://localhost:5000**.
+
+### Optional API keys
+
+Add these to `.env` and restart. Each is independent.
+
+| Variable | Enables | Where to get it |
+|---|---|---|
+| `VITE_GOOGLE_MAPS_API_KEY` | Map display and place search | [Google Cloud Console](https://console.cloud.google.com/apis/credentials) |
+| `PERPLEXITY_API_KEY` | AI contextual search | [Perplexity API](https://www.perplexity.ai/settings/api) |
+| `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` | Sign in with Google | Google Cloud Console credentials |
+| `GITHUB_CLIENT_ID` + `GITHUB_CLIENT_SECRET` | Sign in with GitHub | [GitHub Developer Settings](https://github.com/settings/developers) |
+| `STRIPE_SECRET_KEY` | Payments | [Stripe Dashboard](https://dashboard.stripe.com/apikeys) |
+| `SMTP_*` | Outbound email | Your mail provider |
+
+### Troubleshooting
+
+**`DATABASE_URL environment variable is required`** -- no `.env` file. Run
+`cp env.example .env`.
+
+**`ECONNREFUSED ... 5432`** -- the database isn't running. Start it (step 3) or
+check the port in `DATABASE_URL` matches. The Docker command above uses **55432**
+to avoid clashing with an existing local PostgreSQL.
+
+**`relation "..." does not exist` (code 42P01)** -- run `npm run db:push`.
+
+**`Client network socket disconnected before secure TLS connection`** -- the
+database is refusing SSL. SSL turns off automatically for `localhost` and
+`127.0.0.1`; for any other host that lacks SSL, append `?sslmode=disable` to
+`DATABASE_URL`.
+
+**Port 5000 already in use** -- set `PORT=5001` in `.env`.
 
 ## Deployment Options
 
