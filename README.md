@@ -2,10 +2,6 @@
 
 TowGo is an intelligent business discovery platform that leverages advanced AI and geolocation technologies to provide comprehensive, context-aware local search experiences, focusing on tow truck services.
 
-🚀 **Live Demo**: [TowGo on Replit](https://towgo.replit.app)
-
-📦 **Full Source Code**: [Download ZIP](https://github.com/mrmoe28/towgo/raw/main/towgo.zip)
-
 ## Features
 
 - 🚗 Tow truck search by location
@@ -132,27 +128,10 @@ This project includes configuration for easy deployment to Vercel:
 
 For detailed instructions, see [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md).
 
-### Alternative Deployment Methods
+## Further Documentation
 
-If you prefer not to use GitHub or have issues with repository size, you can use:
-
-- **Git Bundle**: Clone from the provided `towgo.bundle` file (62MB)
-```
-git clone towgo.bundle -b main towgo
-```
-
-- **Zip Archive**: Extract the `towgo.zip` file (79MB) to your preferred location
-
-## GitHub Integration
-
-Due to size limitations and GitHub integration challenges with Replit, this repository includes documentation on how to manage the code:
-
-1. **[GITHUB_SETUP.md](GITHUB_SETUP.md)** - Instructions for pushing the code to GitHub
-2. **[VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)** - Instructions for deploying to Vercel
-3. **towgo.bundle** - Git bundle for easy cloning (62MB)
-4. **towgo.zip** - Complete source code archive (79MB)
-
-For detailed instructions on setting up GitHub with this codebase, see [GITHUB_SETUP.md](GITHUB_SETUP.md).
+- **[VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)** - Deploying to Vercel
+- **[GITHUB_SETUP.md](GITHUB_SETUP.md)** - Working with the GitHub repository
 
 ## License
 
